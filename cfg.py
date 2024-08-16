@@ -98,6 +98,6 @@ def get_cfg():
     parser.add_argument("--n_test", type=int, default=200, help="gnn k")
     parser.add_argument("--angle_random", type=bool, default=False, help="gnn k")
     parser.add_argument("--inception_angle", type=float, default=22.5, help="gnn k")
-    parser.add_argument("--n_eval_GA", type=int, default=20, help="gnn k")
+    parser.add_argument("--n_eval_GA", type=int, default=40, help="gnn k")
 
     return parser.parse_args()
