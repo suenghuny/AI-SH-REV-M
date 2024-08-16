@@ -208,21 +208,21 @@ if __name__ == "__main__":
         num_genes = len(solution_space)
 
         initial_population = []
-        sol_per_pop =8
+        sol_per_pop = 20
         np.random.seed(cfg.seed)
         for _ in range(sol_per_pop):
             new_solution = [np.random.choice(space) for space in solution_space]
             initial_population.append(new_solution)
 
-        num_generations = 12 # 세대 수
-        num_parents_mating = 6  # 각 세대에서 선택할 부모 수
-        init_range_low = 0
-        init_range_high = 20
-        parent_selection_type = "sss"
-        keep_parents = 2
-        crossover_type = "single_point"
-        mutation_type = "random"
-        mutation_percent_genes = 30
+        num_generations = 50 # 세대 수
+        num_parents_mating = 8  # 부모 수 약간 증가
+        init_range_low = -50  # 초기화 범위 확장
+        init_range_high = 50
+        parent_selection_type = "tournament"  # 토너먼트 선택으로 변경
+        keep_parents = -1  # 모든 부모를 새로운 자식으로 대체
+        crossover_type = "uniform"  # 균일 교차로 변경
+        mutation_type = "swap"  # 적응형 돌연변이로 변경
+        mutation_percent_genes = 10  # 돌연변이 비율 감소
         import pygad
         ga_instance = pygad.GA(num_generations=num_generations,
                                num_parents_mating=num_parents_mating,
@@ -260,6 +260,14 @@ if __name__ == "__main__":
 
         best_solution_records[dataset] = empty_dict
         df_fit = pd.DataFrame(fit_records)
+
+        if vessl_on == True:
+            df_fit.to_csv(output_dir + 'fitness_records_dataset{}_GA1_param2_remains.csv'.format(dataset))
+            for s in range(len(fit_records)):
+                f = fit_records[s]
+                vessl.log(step=s, payload={'fitness_records_dataset_{}'.format(dataset): f})
+        else:
+            df_fit.to_csv(output_dir +'fitness_records_dataset{}_GA1_param2_angle_{}_remains.csv'.format(dataset, cfg.inception_angle))
 
 
         fit_records = []
