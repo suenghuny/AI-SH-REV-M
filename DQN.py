@@ -189,16 +189,12 @@ class Network(nn.Module):
         super(Network, self).__init__()
         self.obs_and_action_size = obs_and_action_size
         self.fcn_1 = nn.Linear(obs_and_action_size, hidden_size_q + 10)
-        self.fcn_1bn = nn.BatchNorm1d(hidden_size_q + 10)
 
         self.fcn_2 = nn.Linear(hidden_size_q + 10, hidden_size_q - 5)
-        self.fcn_2bn = nn.BatchNorm1d(hidden_size_q - 5)
 
         self.fcn_3 = nn.Linear(hidden_size_q - 5, hidden_size_q - 20)
-        self.fcn_3bn = nn.BatchNorm1d(hidden_size_q - 20)
 
         self.fcn_4 = nn.Linear(hidden_size_q - 20, hidden_size_q - 40)
-        self.fcn_4bn = nn.BatchNorm1d(hidden_size_q - 40)
 
         self.fcn_5 = nn.Linear(hidden_size_q - 40, action_size)
         # self.fcn_5 = nn.Linear(int(hidden_size_q/8), action_size)
@@ -214,10 +210,10 @@ class Network(nn.Module):
             obs_and_action = obs_and_action.unsqueeze(0)
         # print(obs_and_action.dim())
 
-        x = F.elu(self.fcn_1bn(self.fcn_1(obs_and_action)))
-        x = F.elu(self.fcn_2bn(self.fcn_2(x)))
-        x = F.elu(self.fcn_3bn(self.fcn_3(x)))
-        x = F.elu(self.fcn_4bn(self.fcn_4(x)))
+        x = F.elu(self.fcn_1(obs_and_action))
+        x = F.elu(self.fcn_2(x))
+        x = F.elu(self.fcn_3(x))
+        x = F.elu(self.fcn_4(x))
         q = self.fcn_5(x)
         # q = self.fcn_5(x)
         return q
@@ -233,7 +229,6 @@ class NodeEmbedding(nn.Module):
             layer = layers[i]
             if i <= len(layers)-2:
                 self.linears['linear{}'.format(i)]= nn.Linear(last_layer, layer)
-                self.linears['batchnorm{}'.format(i)] = nn.BatchNorm1d(layer)
                 self.linears['activation{}'.format(i)] = nn.ELU()
                 last_layer = layer
             else:

@@ -2,13 +2,13 @@ from Components.Modeler_Component_test import *
 from Components.Adapter_Component import *
 from Components.Policy import *
 from cfg import get_cfg
-
+import time
 import numpy as np
 
-fit_records = []
-best_solutions = dict()
 fix_l = 0
 fix_u = 17
+fit_records = []
+best_solutions = dict()
 def on_start(ga_instance):
     print("on_start()")
 
@@ -67,8 +67,7 @@ def simulation(solution, ga = True,raw_data = None):
                       air_alert_distance_blue=  air_alert_distance,
                       interval_constant_blue = [interval_constant_blue1, interval_constant_blue2]
                       )
-        epi_reward, eval, win_tag= evaluation(env, temperature1=temperature1,temperature2 = temperature2,
-                                              warning_distance=warning_distance)
+        epi_reward, eval, win_tag= evaluation(env, temperature1=temperature1,temperature2 = temperature2, warning_distance = warning_distance)
         if win_tag != 'lose':
             score += 1 / n
             if ga == False:
@@ -126,7 +125,7 @@ def evaluation(env,
 
     while not done:
         if env.now % (decision_timestep) <= 0.00001:
-            avail_action_blue, target_distance_blue, air_alert_blue = env.get_avail_actions_temp(side='blue')
+            avail_action_blue, target_distance_blue, air_alert_blue = env.get_avail_actions_temp(side='blue', speed_normalizing_blue=False)
             avail_action_yellow, target_distance_yellow, air_alert_yellow = env.get_avail_actions_temp(side='yellow')
 
             action_blue = agent_blue.get_action(avail_action_blue, target_distance_blue, air_alert_blue, open_fire_distance = warning_distance)
@@ -163,12 +162,8 @@ if __name__ == "__main__":
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
     else:
-        from torch.utils.tensorboard import SummaryWriter
-
-        output_dir = "../output_susceptibility_heuristic/"
-        writer = SummaryWriter('./logs2')
+        output_dir = "/output_susceptibility_GA2/"
         import os
-
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
     import time
@@ -185,7 +180,9 @@ if __name__ == "__main__":
     polar_chart = [polar_chart_scenario1]
     df_dict = {}
     episode_polar_chart = polar_chart[0]
-    datasets = [i for i in range(1, 31)]
+    datasets = [i for i in range(7, 31)]
+    start = time.time()
+
     non_lose_ratio_list = []
     raw_data = list()
     for dataset in datasets:
@@ -205,28 +202,31 @@ if __name__ == "__main__":
         remains_ratio = list()
         df_dict = {}
         records = list()
+
         solution_space = [[i/10 for i in range(-200, 200)], [i/10  for i in range(0, 500)],
                           [i/10  for i in range(-200, 200)], [i/10  for i in range(0, 500)], [i/10 for i in range(0,2000)],
-                          [i/10 for i in range(0, 3000)]]
-
+                          [i/10 for i in range(0,3000)]
+                          ]
         num_genes = len(solution_space)
 
         initial_population = []
-        sol_per_pop =8
+        sol_per_pop = 20
         np.random.seed(cfg.seed)
         for _ in range(sol_per_pop):
             new_solution = [np.random.choice(space) for space in solution_space]
             initial_population.append(new_solution)
 
-        num_generations = 12 # 세대 수
-        num_parents_mating = 6  # 각 세대에서 선택할 부모 수
-        init_range_low = 0
-        init_range_high = 20
-        parent_selection_type = "sss"
-        keep_parents = 2
-        crossover_type = "single_point"
-        mutation_type = "random"
-        mutation_percent_genes = 30
+        num_generations = 50 # 세대 수
+        num_parents_mating = 8  # 부모 수 약간 증가
+        init_range_low = -50  # 초기화 범위 확장
+        init_range_high = 50
+        parent_selection_type = "tournament"  # 토너먼트 선택으로 변경
+        keep_parents = -1  # 모든 부모를 새로운 자식으로 대체
+        crossover_type = "uniform"  # 균일 교차로 변경
+        mutation_type = "swap"  # 적응형 돌연변이로 변경
+        mutation_percent_genes = 10  # 돌연변이 비율 감소
+
+
         import pygad
         ga_instance = pygad.GA(num_generations=num_generations,
                                num_parents_mating=num_parents_mating,
@@ -264,25 +264,31 @@ if __name__ == "__main__":
 
         best_solution_records[dataset] = empty_dict
         df_fit = pd.DataFrame(fit_records)
-
-
+        if vessl_on == True:
+            df_fit.to_csv(output_dir + 'fitness_records_dataset{}_rule5_param2.csv'.format(dataset))
+            for s in range(len(fit_records)):
+                f = fit_records[s]
+                vessl.log(step=s, payload={'fitness_records_dataset_{}'.format(dataset): f})
+        else:
+            df_fit.to_csv(output_dir + 'fitness_records_dataset{}_GA2_param2_angle_{}.csv'.format(dataset, cfg.inception_angle))
         fit_records = []
-
         print("최적해:", best_solutions)
         print("최적해의 적합도:", fitness)
         score, raw_data = simulation(best_solutions, ga = False, raw_data = raw_data)
         non_lose_ratio_list.append(score)
         df_result = pd.DataFrame(non_lose_ratio_list)
         df_raw = pd.DataFrame(raw_data)
+        print("소요시간", time.time()-start)
         if vessl_on == True:
-            df_result.to_csv(output_dir + "GA_result_rule3_param2_angle_{}.csv".format(cfg.inception_angle))
-            df_raw.to_csv(output_dir+"raw_data_rule3_angle_{}.csv".format(cfg.inception_angle))
-            df_fit.to_csv(output_dir+'fitness_records_dataset{}_rule3_param2_{}.csv'.format(dataset, cfg.inception_angle))
+            df_result.to_csv(output_dir + "GA2_angle_{}.csv".format(cfg.inception_angle))
+            df_raw.to_csv(output_dir+"raw_data_GA2_angle_{}.csv".format(cfg.inception_angle))
+            df_fit.to_csv(output_dir+'fitness_records_dataset{}_GA2_param2_{}.csv'.format(dataset, cfg.inception_angle))
             vessl.log(step=dataset, payload={'non_lose_ratio': score})
         else:
-            df_result.to_csv("GA_result_rule3_param2_angle_{}.csv".format(cfg.inception_angle))
-            df_raw.to_csv("raw_data_rule3_angle_{}.csv".format(cfg.inception_angle))
-            df_fit.to_csv('fitness_records_dataset{}_rule3_param2_{}.csv'.format(dataset, cfg.inception_angle))
+            df_result.to_csv(output_dir + "GA2_angle_{}.csv".format(cfg.inception_angle))
+            df_raw.to_csv(output_dir + "raw_data_GA2_angle_{}.csv".format(cfg.inception_angle))
+            df_fit.to_csv(output_dir + 'fitness_records_dataset{}_GA2_param2_{}.csv'.format(dataset, cfg.inception_angle))
+
 
 
 
