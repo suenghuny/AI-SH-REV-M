@@ -163,12 +163,8 @@ if __name__ == "__main__":
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
     else:
-        from torch.utils.tensorboard import SummaryWriter
-
-        output_dir = "../output_susceptibility_heuristic/"
-        writer = SummaryWriter('./logs2')
+        output_dir = "/output_susceptibility_GA1/"
         import os
-
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
     import time
@@ -185,7 +181,7 @@ if __name__ == "__main__":
     polar_chart = [polar_chart_scenario1]
     df_dict = {}
     episode_polar_chart = polar_chart[0]
-    datasets = [i for i in range(1, 31)]
+    datasets = [i for i in range(7, 31)]
     non_lose_ratio_list = []
     raw_data = list()
     for dataset in datasets:
@@ -275,14 +271,14 @@ if __name__ == "__main__":
         df_result = pd.DataFrame(non_lose_ratio_list)
         df_raw = pd.DataFrame(raw_data)
         if vessl_on == True:
-            df_result.to_csv(output_dir + "GA_result_rule3_param2_angle_{}.csv".format(cfg.inception_angle))
-            df_raw.to_csv(output_dir+"raw_data_rule3_angle_{}.csv".format(cfg.inception_angle))
-            df_fit.to_csv(output_dir+'fitness_records_dataset{}_rule3_param2_{}.csv'.format(dataset, cfg.inception_angle))
+            df_result.to_csv(output_dir + "GA1_angle_{}.csv".format(cfg.inception_angle))
+            df_raw.to_csv(output_dir+"raw_data_GA1_angle_{}.csv".format(cfg.inception_angle))
+            df_fit.to_csv(output_dir+'fitness_records_dataset{}_GA1_param2_{}.csv'.format(dataset, cfg.inception_angle))
             vessl.log(step=dataset, payload={'non_lose_ratio': score})
         else:
-            df_result.to_csv("GA_result_rule3_param2_angle_{}.csv".format(cfg.inception_angle))
-            df_raw.to_csv("raw_data_rule3_angle_{}.csv".format(cfg.inception_angle))
-            df_fit.to_csv('fitness_records_dataset{}_rule3_param2_{}.csv'.format(dataset, cfg.inception_angle))
+            df_result.to_csv(output_dir + "GA1_angle_{}.csv".format(cfg.inception_angle))
+            df_raw.to_csv(output_dir + "raw_data_GA1_angle_{}.csv".format(cfg.inception_angle))
+            df_fit.to_csv(output_dir + 'fitness_records_dataset{}_GA1_param2_{}.csv'.format(dataset, cfg.inception_angle))
 
 
 
