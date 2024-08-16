@@ -50,7 +50,7 @@ def simulation(solution, ga = True,raw_data = None):
         n = cfg.n_test
         print("=========평가시작===========")
     else:
-        seed=cfg.seed+220202
+        seed=cfg.seed
         np.random.seed(seed)
         random.seed(seed)
         n = cfg.n_eval_GA
@@ -203,14 +203,14 @@ if __name__ == "__main__":
         df_dict = {}
         records = list()
 
-        solution_space = [[i/10 for i in range(-200, 200)], [i/10  for i in range(0, 500)],
-                          [i/10  for i in range(-200, 200)], [i/10  for i in range(0, 500)], [i/10 for i in range(0,2000)],
-                          [i/10 for i in range(0,3000)]
+        solution_space = [[i/10 for i in range(-600, 600)], [i/10  for i in range(0, 3000)],
+                          [i/10  for i in range(-600, 600)], [i/10  for i in range(0, 3000)], [i/10 for i in range(0,5000)],
+                          [i/10 for i in range(0,5000)]
                           ]
         num_genes = len(solution_space)
 
         initial_population = []
-        sol_per_pop = 20
+        sol_per_pop = 40
         np.random.seed(cfg.seed)
         for _ in range(sol_per_pop):
             new_solution = [np.random.choice(space) for space in solution_space]
