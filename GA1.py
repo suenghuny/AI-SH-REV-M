@@ -201,14 +201,21 @@ if __name__ == "__main__":
         remains_ratio = list()
         df_dict = {}
         records = list()
-        solution_space = [[i/10 for i in range(-200, 200)], [i/10  for i in range(0, 500)],
-                          [i/10  for i in range(-200, 200)], [i/10  for i in range(0, 500)], [i/10 for i in range(0,2000)],
-                          [i/10 for i in range(0, 3000)]]
+
+        # solution_space = [[i / 10 for i in range(-600, 600)], [i / 10 for i in range(0, 3000)],
+        #                   [i / 10 for i in range(-600, 600)], [i / 10 for i in range(0, 3000)],
+        #                   [i / 10 for i in range(0, 5000)],
+        #                   [i / 10 for i in range(0, 5000)]
+        #                   ]
+
+        solution_space = [[i/10 for i in range(-600, 600)], [i/10  for i in range(0, 3000)],
+                          [i/10  for i in range(-600, 600)], [i/10  for i in range(0, 3000)], [i/10 for i in range(0,5000)],
+                          [i/10 for i in range(0, 5000)]]
 
         num_genes = len(solution_space)
 
         initial_population = []
-        sol_per_pop = 20
+        sol_per_pop = 40
         np.random.seed(cfg.seed)
         for _ in range(sol_per_pop):
             new_solution = [np.random.choice(space) for space in solution_space]
