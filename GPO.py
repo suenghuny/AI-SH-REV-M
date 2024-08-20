@@ -148,6 +148,11 @@ class Agent:
             self.eval_params = list(self.network.parameters()) + \
                                list(self.node_representation_ship_feature.parameters()) + \
                                list(self.node_representation_wo_graph.parameters())
+        if cfg.k_hop == 1:
+            self.eval_params = list(self.network.parameters()) + \
+                               list(self.node_representation_ship_feature.parameters()) + \
+                               list(self.func_meta_path.parameters()) + \
+                               list(self.func_meta_path2.parameters())
         if cfg.k_hop == 2:
             self.eval_params = list(self.network.parameters()) + \
                                list(self.node_representation_ship_feature.parameters()) + \
@@ -290,8 +295,11 @@ class Agent:
                 node_embedding_ship_features = self.node_representation_ship_feature(ship_features)
                 missile_node_feature = torch.tensor(missile_node_feature, dtype=torch.float,device=device).clone().detach()
                 if cfg.k_hop != 0:
-                    node_representation_graph = self.func_meta_path(A=edge_index_missile,X=missile_node_feature, mini_batch=mini_batch)
-                    node_representation_graph = self.func_meta_path2(A=edge_index_missile, X=node_representation_graph,mini_batch=mini_batch)
+                    if cfg.k_hop == 1:
+                        node_representation_graph = self.func_meta_path(A=edge_index_missile,X=missile_node_feature, mini_batch=mini_batch)
+                    if cfg.k_hop == 2:
+                        node_representation_graph = self.func_meta_path(A=edge_index_missile,X=missile_node_feature, mini_batch=mini_batch)
+                        node_representation_graph = self.func_meta_path2(A=edge_index_missile, X=node_representation_graph,mini_batch=mini_batch)
                     if  cfg.k_hop == 3:
                         node_representation_graph = self.func_meta_path3(A=edge_index_missile, X=node_representation_graph,
                                                                          mini_batch=mini_batch)
@@ -342,9 +350,11 @@ class Agent:
             #
             missile_node_feature = torch.tensor(temp, dtype=torch.float).to(device)
             if cfg.k_hop !=0:
-
-                node_representation_graph = self.func_meta_path(A=edge_index_missile, X=missile_node_feature, mini_batch=mini_batch)
-                node_representation_graph = self.func_meta_path2(A=edge_index_missile, X=node_representation_graph, mini_batch=mini_batch)
+                if cfg.k_hop == 1:
+                    node_representation_graph = self.func_meta_path(A=edge_index_missile, X=missile_node_feature, mini_batch=mini_batch)
+                if cfg.k_hop == 2:
+                    node_representation_graph = self.func_meta_path(A=edge_index_missile, X=missile_node_feature, mini_batch=mini_batch)
+                    node_representation_graph = self.func_meta_path2(A=edge_index_missile, X=node_representation_graph, mini_batch=mini_batch)
                 if cfg.k_hop == 3:
                     node_representation_graph = self.func_meta_path3(A=edge_index_missile, X=node_representation_graph,
                                                                      mini_batch=mini_batch)
