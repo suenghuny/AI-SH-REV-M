@@ -180,7 +180,7 @@ if __name__ == "__main__":
     polar_chart = [polar_chart_scenario1]
     df_dict = {}
     episode_polar_chart = polar_chart[0]
-    datasets = [i for i in range(7, 31)]
+    datasets = [i for i in range(cfg.dataset_start, cfg.dataset_finish)]
     start = time.time()
 
     non_lose_ratio_list = []

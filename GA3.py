@@ -183,7 +183,7 @@ if __name__ == "__main__":
     polar_chart = [polar_chart_scenario1]
     df_dict = {}
     episode_polar_chart = polar_chart[0]
-    datasets = [i for i in range(7, 31)]
+    datasets = [i for i in range(cfg.dataset_start, cfg.dataset_finish)]
     non_lose_ratio_list = []
     raw_data = list()
     for dataset in datasets:
@@ -220,7 +220,7 @@ if __name__ == "__main__":
             new_solution = [np.random.choice(space) for space in solution_space]
             initial_population.append(new_solution)
 
-        num_generations = 50 # 세대 수
+        num_generations = 20 # 세대 수
         num_parents_mating = 8  # 부모 수 약간 증가
         init_range_low = -50  # 초기화 범위 확장
         init_range_high = 50
