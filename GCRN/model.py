@@ -102,6 +102,7 @@ class GCRN(nn.Module):
     #         return e@E
 
     def forward(self, A, X, mini_batch, layer = 0):
+
         if mini_batch == False:
             temp = list()
             for e in range(len(A)):

@@ -94,10 +94,13 @@ def get_cfg():
     parser.add_argument("--kl_target", type=float, default=0.005, help="kl target")
     parser.add_argument("--negativeslope", type=float, default=0.1, help="leaky relu negative slope")
     parser.add_argument("--n_data_parallelism", type=int, default=16, help="data parallelism")
-    parser.add_argument("--k_hop", type=int, default=3, help="gnn k")
+    parser.add_argument("--k_hop", type=int, default=1, help="gnn k")
     parser.add_argument("--n_test", type=int, default=200, help="gnn k")
     parser.add_argument("--angle_random", type=bool, default=False, help="gnn k")
     parser.add_argument("--inception_angle", type=float, default=22.5, help="gnn k")
     parser.add_argument("--n_eval_GA", type=int, default=40, help="gnn k")
+
+    parser.add_argument("--dataset_start", type=int, default=7, help="gnn k")
+    parser.add_argument("--dataset_finish", type=int, default=31, help="gnn k")
 
     return parser.parse_args()
