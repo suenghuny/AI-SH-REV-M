@@ -54,7 +54,7 @@ def simulation(solution, ga = True,raw_data = None):
         np.random.seed(seed)
         random.seed(seed)
         n = cfg.n_eval_GA
-
+    records = list()
     for e in range(n):
         env = modeler(data,
                       visualize=visualize,
@@ -68,11 +68,16 @@ def simulation(solution, ga = True,raw_data = None):
                       interval_constant_blue = [interval_constant_blue1, interval_constant_blue2]
                       )
         epi_reward, eval, win_tag= evaluation(env, temperature1=temperature1,temperature2 = temperature2, warning_distance = warning_distance)
+        if len(records)>2:
+            print(win_tag, np.mean(records))
+
         if win_tag != 'lose':
             score += 1 / n
+            records.append(1)
             if ga == False:
                 raw_data.append([str(env.random_recording), 1])
         else:
+            records.append(0)
             score += 0
             if ga == False:
                 raw_data.append([str(env.random_recording), 0])
@@ -216,7 +221,7 @@ if __name__ == "__main__":
             new_solution = [np.random.choice(space) for space in solution_space]
             initial_population.append(new_solution)
 
-        num_generations = 20 # 세대 수
+        num_generations = 50 # 세대 수
         num_parents_mating = 8  # 부모 수 약간 증가
         init_range_low = -50  # 초기화 범위 확장
         init_range_high = 50
@@ -227,53 +232,11 @@ if __name__ == "__main__":
         mutation_percent_genes = 10  # 돌연변이 비율 감소
 
 
-        import pygad
-        ga_instance = pygad.GA(num_generations=num_generations,
-                               num_parents_mating=num_parents_mating,
-                               fitness_func=fitness_func,
-                               sol_per_pop=sol_per_pop,
-                               num_genes=num_genes,
-                                parent_selection_type = parent_selection_type,
-                                keep_parents = keep_parents,
-                               initial_population=initial_population,
-                               gene_space = solution_space,
-                               crossover_type = crossover_type,
-                               mutation_type = mutation_type,
-                               mutation_percent_genes = mutation_percent_genes,
-                               on_start=on_start,
-                               on_fitness=on_fitness,
-                               on_parents=on_parents,
-                               on_crossover=on_crossover,
-                               on_mutation=on_mutation,
-                               on_generation=on_generation,
-                               on_stop=on_stop,
-                               random_seed=cfg.seed
-
-                               )
-
-        # 최적화 실행
-        ga_instance.run()
-        fitness = ga_instance.best_solution()[1]
-        best_solutions = ga_instance.best_solution()[0]
-        #fitness_history = ga_instance.plot_fitness()
+        best_solutions =  [ 27.4,128.3, 8.7, 27.4, 177.4, 39.6]
 
 
-        empty_dict = dict()
-        for i in range(len(best_solutions)):
-            empty_dict[i] = best_solutions[i]
 
-        best_solution_records[dataset] = empty_dict
-        df_fit = pd.DataFrame(fit_records)
-        if vessl_on == True:
-            df_fit.to_csv(output_dir + 'fitness_records_dataset{}_rule5_param2.csv'.format(dataset))
-            for s in range(len(fit_records)):
-                f = fit_records[s]
-                vessl.log(step=s, payload={'fitness_records_dataset_{}'.format(dataset): f})
-        else:
-            df_fit.to_csv(output_dir + 'fitness_records_dataset{}_GA2_param2_angle_{}.csv'.format(dataset, cfg.inception_angle))
-        fit_records = []
-        print("최적해:", best_solutions)
-        print("최적해의 적합도:", fitness)
+
         score, raw_data = simulation(best_solutions, ga = False, raw_data = raw_data)
         non_lose_ratio_list.append(score)
         df_result = pd.DataFrame(non_lose_ratio_list)
