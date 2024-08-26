@@ -100,7 +100,7 @@ def get_cfg():
 
     parser.add_argument("--inception_angle", type=float, default=45, help="gnn k")
 
-    parser.add_argument("--inception_angle", type=float, default=0, help="gnn k")
+    #parser.add_argument("--inception_angle", type=float, default=0, help="gnn k")
 
     parser.add_argument("--n_eval_GA", type=int, default=20, help="gnn k")
 
