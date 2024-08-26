@@ -44,7 +44,7 @@ def simulation(solution, ga = True,raw_data = None):
     score = 0
 
     if ga == False:
-        seed = cfg.seed+25
+        seed = cfg.seed
         np.random.seed(seed)
         random.seed(seed)
         n = cfg.n_test
