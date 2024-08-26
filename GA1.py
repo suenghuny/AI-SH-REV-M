@@ -50,7 +50,7 @@ def simulation(solution, ga = True,raw_data = None):
         n = cfg.n_test
         print("=========평가시작===========")
     else:
-        seed=cfg.seed
+        seed=cfg.seed+25
         np.random.seed(seed)
         random.seed(seed)
         n = cfg.n_eval_GA

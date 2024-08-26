@@ -301,6 +301,11 @@ class Agent:
                         node_representation_graph = self.func_meta_path(A=edge_index_missile,X=missile_node_feature, mini_batch=mini_batch)
                         node_representation_graph = self.func_meta_path2(A=edge_index_missile, X=node_representation_graph,mini_batch=mini_batch)
                     if  cfg.k_hop == 3:
+                        node_representation_graph = self.func_meta_path(A=edge_index_missile, X=missile_node_feature,
+                                                                        mini_batch=mini_batch)
+                        node_representation_graph = self.func_meta_path2(A=edge_index_missile,
+                                                                         X=node_representation_graph,
+                                                                         mini_batch=mini_batch)
                         node_representation_graph = self.func_meta_path3(A=edge_index_missile, X=node_representation_graph,
                                                                          mini_batch=mini_batch)
 
