@@ -97,11 +97,11 @@ def get_cfg():
     parser.add_argument("--k_hop", type=int, default=1, help="gnn k")
     parser.add_argument("--n_test", type=int, default=200, help="gnn k")
     parser.add_argument("--angle_random", type=bool, default=False, help="gnn k")
-<<<<<<< HEAD
+
     parser.add_argument("--inception_angle", type=float, default=45, help="gnn k")
-=======
+
     parser.add_argument("--inception_angle", type=float, default=0, help="gnn k")
->>>>>>> 2badd59d545e3529da1d018581845d340b8f6d2f
+
     parser.add_argument("--n_eval_GA", type=int, default=20, help="gnn k")
 
     parser.add_argument("--dataset_start", type=int, default=7, help="gnn k")
