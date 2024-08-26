@@ -117,6 +117,17 @@ class Policy:
                 avail_actions_index = np.array(np.where(avail_action == True)).reshape(-1)
                 actions.append(np.random.choice(avail_actions_index))
 
+        if self.rule == 'rule0_prime':
+            actions = list()
+            for idx in range(len(avail_action_list)):
+                avail_action = np.array(avail_action_list[idx])
+                if True in avail_action[1:]:
+                    avail_action[0] = False
+                avail_actions_index = np.array(np.where(avail_action == True)).reshape(-1)
+                actions.append(np.random.choice(avail_actions_index))
+            print(actions)
+
+
         if self.rule == 'rule1':
             actions = list()
             for idx in range(len(avail_action_list)):

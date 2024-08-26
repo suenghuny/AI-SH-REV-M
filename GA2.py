@@ -197,7 +197,7 @@ if __name__ == "__main__":
         num_iteration = cfg.num_episode  # 시뮬레이션 반복횟수
         rule = 'rule2'          # rule1 : 랜덤 정책 / rule2 : 거리를 기반 합리성에 기반한 정책(softmax policy)
         temperature = [10, 20]  # rule = 'rule2'인 경우만 적용 / 의사결정의 flexibility / 첫번째 index : 공중 위험이 낮은 상태, 두번째 index : 공중 위험이 높은 상태
-        ciws_threshold = 0.5
+        ciws_threshold = 1
         lose_ratio = list()
         remains_ratio = list()
         df_dict = {}
