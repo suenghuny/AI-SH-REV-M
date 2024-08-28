@@ -176,7 +176,9 @@ if __name__ == "__main__":
     mode = 'excel'
     vessl_on = cfg.vessl
     polar_chart_visualize = False
-    polar_chart_scenario1 = [33, 29, 25, 33, 30, 30, 55, 27, 27, 35, 25, 30, 40]  # RCS의 polarchart 적용
+    polar_chart_scenario1 = [33, 29, 25, 33, 30, 30, 55, 27, 27, 35, 25, 30, 40]
+
+    # RCS의 polarchart 적용
     best_solution_records = dict()
     polar_chart = [polar_chart_scenario1]
     df_dict = {}
