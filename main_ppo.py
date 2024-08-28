@@ -11,6 +11,16 @@ from scipy.stats import randint
 fix_l = 0
 fix_u = 17
 
+def preprocessing2(scenarios):
+    scenario = scenarios
+    input_path = "Data/Test/dataset{}/input_data.xlsx".format(scenario)
+    data = Adapter(input_path=input_path,
+                   mode= 'excel',
+                   polar_chart=episode_polar_chart,
+                   polar_chart_visualize=polar_chart_visualize)
+    return data
+
+
 def preprocessing(scenarios):
     scenario = scenarios[0]
     if mode == 'txt':
@@ -28,7 +38,6 @@ def preprocessing(scenarios):
                           "Data/{}/inception.txt".format(scenario)]
     else:
         input_path = "Data\input_data.xlsx"
-
     data = Adapter(input_path=input_path,
                    mode=mode,
                    polar_chart=episode_polar_chart,
@@ -187,10 +196,11 @@ if __name__ == "__main__":
     import torch, random
 ##
     seed = cfg.seed  # 원래 SEED 1234
-    np.random.seed(1234)
-    random.seed(1234)
+    np.random.seed(cfg.seed)
+    random.seed(cfg.seed)
     torch.manual_seed(seed)
     data = preprocessing(scenarios)
+    test_data = preprocessing2(8)
     t = 0
     env = modeler(data,
                   visualize=visualize,
@@ -206,8 +216,7 @@ if __name__ == "__main__":
                   feature_size_missile=env.get_env_info()["missile_feature_shape"],
                   n_node_feature_missile=env.friendlies_fixed_list[0].air_tracking_limit +
                                          env.friendlies_fixed_list[0].air_engagement_limit +
-                                         env.friendlies_fixed_list[0].num_m_sam +
-                                         1,
+                                         env.friendlies_fixed_list[0].num_m_sam +1,
                  node_embedding_layers_ship=list(eval(cfg.ship_layers)),
                  node_embedding_layers_missile=list(eval(cfg.missile_layers)),
                  n_representation_ship = cfg.n_representation_ship,
@@ -231,8 +240,9 @@ if __name__ == "__main__":
         if e % 10 == 0 and e>0:
             n_eval = 20
             non_lose_ratio = 0
+
             for _ in range(n_eval):
-                env = modeler(data,
+                test_env = modeler(test_data,
                               visualize=visualize,
                               size=size,
                               detection_by_height=detection_by_height,
@@ -240,10 +250,36 @@ if __name__ == "__main__":
                               simtime_per_framerate=simtime_per_frame,
                               ciws_threshold=ciws_threshold,
                               action_history_step=cfg.action_history_step)
-                episode_reward, win_tag = evaluation(agent, env)
+                agent.action_size = test_env.get_env_info()["n_actions"]
+                agent.feature_size_ship = test_env.get_env_info()["ship_feature_shape"],
+                agent.feature_size_missile = test_env.get_env_info()["missile_feature_shape"],
+                agent.n_node_feature_missile = test_env.friendlies_fixed_list[0].air_tracking_limit + \
+                                               test_env.friendlies_fixed_list[0].air_engagement_limit + \
+                                               test_env.friendlies_fixed_list[0].num_m_sam + 1
+                episode_reward, win_tag = evaluation(agent, test_env)
                 if win_tag != 'lose':
                     non_lose_ratio += 1/n_eval
                 print(episode_reward, win_tag)
+
+            env = modeler(data,
+                          visualize=visualize,
+                          size=size,
+                          detection_by_height=detection_by_height,
+                          tick=tick,
+                          simtime_per_framerate=simtime_per_frame,
+                          ciws_threshold=ciws_threshold,
+                          action_history_step=cfg.action_history_step)
+            agent.action_size = env.get_env_info()["n_actions"]
+            agent.feature_size_ship = env.get_env_info()["ship_feature_shape"],
+            agent.feature_size_missile = env.get_env_info()["missile_feature_shape"],
+            agent.n_node_feature_missile = env.friendlies_fixed_list[0].air_tracking_limit + \
+                                           env.friendlies_fixed_list[0].air_engagement_limit + \
+                                           env.friendlies_fixed_list[0].num_m_sam + 1
+
+
+
+
+
             if vessl_on == True:
                 vessl.log(step=e, payload={'non_lose_ratio': non_lose_ratio})
             non_lose_ratio_list.append(non_lose_ratio)

@@ -18,8 +18,8 @@ def get_cfg():
     parser.add_argument("--GNN", type=str, default='GCRN', help="map name")
     parser.add_argument("--hidden_size_comm", type=int, default=56, help="GNN hidden layer")
     parser.add_argument("--hidden_size_enemy", type=int, default=64, help="GNN hidden layer")
-    parser.add_argument("--hidden_size_meta_path", type=int, default=75, help="GNN hidden layer")
-    parser.add_argument("--hidden_size_meta_path2", type=int, default=75, help="GNN hidden layer")
+    parser.add_argument("--hidden_size_meta_path", type=int, default=68, help="GNN hidden layer")
+    parser.add_argument("--hidden_size_meta_path2", type=int, default=68, help="GNN hidden layer")
     parser.add_argument("--iqn_layers", type=str, default= '[128,64,48,39,16]', help="layer 구조")
     parser.add_argument("--ppo_layers", type=str, default='[128,64,48,39,32]', help="layer 구조")
     parser.add_argument("--ship_layers", type=str, default='[126,108,64]', help="layer 구조")
@@ -29,8 +29,8 @@ def get_cfg():
     parser.add_argument("--n_representation_ship", type=int, default=52, help="")
     parser.add_argument("--n_representation_missile", type=int, default=14, help="")
     parser.add_argument("--n_representation_enemy", type=int, default=28, help="")
-    parser.add_argument("--n_representation_action", type=int, default=45, help="")
-    parser.add_argument("--n_representation_action2", type=int, default=45, help="")
+    parser.add_argument("--n_representation_action", type=int, default=39, help="")
+    parser.add_argument("--n_representation_action2", type=int, default=39, help="")
     parser.add_argument("--iqn_layer_size", type=int, default=64, help="")
     parser.add_argument("--iqn_N", type=int, default=48, help="")
     parser.add_argument("--n_cos", type=int, default=36, help="")
@@ -79,7 +79,7 @@ def get_cfg():
     parser.add_argument("--num_action_history", type=int, default=10, help="")
 
     # 이녀석이 찐임
-    parser.add_argument("--discr_n", type=int, default=10, help="")
+    parser.add_argument("--discr_n", type=int, default=11, help="")
     # 이녀석이 찐임
     parser.add_argument("--graph_distance", type=float, default=10, help="graph distance")
     # 이녀석이 찐임

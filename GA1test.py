@@ -181,7 +181,7 @@ if __name__ == "__main__":
     polar_chart = [polar_chart_scenario1]
     df_dict = {}
     episode_polar_chart = polar_chart[0]
-    datasets = [i for i in range(9, 10)]
+    datasets = [i for i in range(22, 23)]
     non_lose_ratio_list = []
     raw_data = list()
     for dataset in datasets:
@@ -252,7 +252,7 @@ if __name__ == "__main__":
 
         fit_records = []
 
-        best_solutions = [ 20.6 , 13.5 , 36.5, 273.,  251.9 , 39.6]
+        best_solutions = [ 20.6 ,229.2 ,-26.3,  20.6,  91.1, 259.4]
         score, raw_data = simulation(best_solutions, ga = False, raw_data = raw_data)
         print(score)
         non_lose_ratio_list.append(score)

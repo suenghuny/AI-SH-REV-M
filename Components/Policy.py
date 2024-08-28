@@ -125,7 +125,7 @@ class Policy:
                     avail_action[0] = False
                 avail_actions_index = np.array(np.where(avail_action == True)).reshape(-1)
                 actions.append(np.random.choice(avail_actions_index))
-            print(actions)
+
 
 
         if self.rule == 'rule1':

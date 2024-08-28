@@ -165,7 +165,7 @@ if __name__ == "__main__":
         score = simulation()
         non_lose_ratio_list.append(score)
         df_result = pd.DataFrame(non_lose_ratio_list)
-        df_result.to_csv("interval_result_rule2_param2_angle_{}.csv".format(cfg.inception_angle))
+        df_result.to_csv("heu3_interval_result_rule2_param2_angle_{}.csv".format(cfg.inception_angle))
 
 
 

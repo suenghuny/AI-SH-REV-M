@@ -194,7 +194,7 @@ if __name__ == "__main__":
             df_result.to_csv(output_dir + "GA_result_rule2_param2_angle_{}2.csv".format(cfg.inception_angle))
             vessl.log(step=dataset, payload={'non_lose_ratio': score})
         else:
-            df_result.to_csv("random_result_rule2_param2_angle_{}2.csv".format(cfg.inception_angle))
+            df_result.to_csv("heu5_random_result_rule2_param2_angle_{}2.csv".format(cfg.inception_angle))
 
 
 

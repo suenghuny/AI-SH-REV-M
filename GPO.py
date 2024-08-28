@@ -536,17 +536,14 @@ class Agent:
 
         obs = obs.expand([act_graph.shape[0], obs.shape[1]])
         obs_n_action = torch.cat([obs, act_graph], dim = 1)
-
-
         logit = [self.network.pi(obs_n_action[i].unsqueeze(0)) for i in range(obs_n_action.shape[0])]
-
         logit = torch.stack(logit).view(1, -1)
         action_size = obs_n_action.shape[0]
         if action_size >= self.action_size:
              action_size = self.action_size
         remain_action = torch.tensor([-1e8 for _ in range(self.action_size - action_size)], device=device).unsqueeze(0)
         logit = torch.cat([logit, remain_action], dim=1)
-        #print("action", logit.shape)
+
         mask = torch.tensor(possible_actions, device=device).bool()
         logit = logit.masked_fill(mask == 0, -1e8)
         prob = torch.softmax(logit, dim=-1)

@@ -232,7 +232,7 @@ if __name__ == "__main__":
         mutation_percent_genes = 10  # 돌연변이 비율 감소
 
 
-        best_solutions =  [ 27.4,128.3, 8.7, 27.4, 177.4, 39.6]
+        best_solutions =   [173.1, 128.3 ,  8.7,  20.6, 249.5,  88.7]
 
 
 
